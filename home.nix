@@ -10,8 +10,8 @@
 {
   # Added 'inputs' here
 
-  home.username = "nightkat01";
-  home.homeDirectory = "/home/nightkat01";
+  home.username = "superkat01";
+  home.homeDirectory = "/home/superkat01";
   home.stateVersion = "25.11";
 
   imports = [
@@ -22,6 +22,7 @@
     ./home/git.nix
     ./home/ghostty.nix
     ./home/wrappers.nix
+    ./home/qdl.nix
   ];
 
   home.packages = [

@@ -24,7 +24,7 @@
       # theme = "Everforest Dark Hard";
       # theme = "Rose Pine Moon";
       # This removes the title bar/tab bar for that clean Niri look
-      window-decoration = false;
+      window-decoration = true;
 
       # Optional: Makes the window slightly transparent to match Hyprlock vibes
       #     window-background-opacity = 0.9;

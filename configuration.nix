@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, unstable, ... }:
 
 {
   imports = [
@@ -32,18 +32,18 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
 
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "bn_BD";
-    LC_IDENTIFICATION = "bn_BD";
-    LC_MEASUREMENT = "bn_BD";
-    LC_MONETARY = "bn_BD";
-    LC_NAME = "bn_BD";
-    LC_NUMERIC = "bn_BD";
-    LC_PAPER = "bn_BD";
-    LC_TELEPHONE = "bn_BD";
-    LC_TIME = "bn_BD";
-  };
 
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_SG.UTF-8";
+    LC_IDENTIFICATION = "en_SG.UTF-8";
+    LC_MEASUREMENT = "en_SG.UTF-8";
+    LC_MONETARY = "en_SG.UTF-8";
+    LC_NAME = "en_SG.UTF-8";
+    LC_NUMERIC = "en_SG.UTF-8";
+    LC_PAPER = "en_SG.UTF-8";
+    LC_TELEPHONE = "en_SG.UTF-8";
+    LC_TIME = "en_SG.UTF-8";
+};
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.flatpak.enable = true;
@@ -57,6 +57,14 @@
     layout = "us";
     variant = "";
   };
+
+ #  services.clamav = {
+ #    # This enables the freshclam updater service
+ #    updater.enable = true; 
+ # package = unstable.clamav;   
+ #    # Optional: Enable the daemon so you don't have to scan manually
+ #    daemon.enable = true; 
+ #  };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -81,6 +89,7 @@
   users.users.superkat01 = {
     isNormalUser = true;
     description = "SulTan Mahmud";
+    shell = pkgs.zsh;
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -92,6 +101,7 @@
 
   # Install firefox.
   # programs.firefox.enable = true;
+  programs.zsh.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -99,12 +109,22 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+  gh
+  unstable.opencode
+  unstable.ani-cli
     duf
+    ffmpeg 
+   unstable.yt-dlp
+    btop
+    ripgrep
+    fd
+    sd
     git
     wget
     neovim
     yazi
     lohit-fonts.bengali
+    wl-clipboard
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -122,6 +142,10 @@
   ];
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+
+# networking.extraHosts = ''
+#   127.0.0.1 movieall123.xyz
+# '';
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

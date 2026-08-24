@@ -17,6 +17,7 @@
     };
 
     shellAliases = {
+      ani = "ani-cli --dub";
       ls = "eza --icons --group-directories-first";
       ll = "eza -la --icons --group-directories-first";
 
@@ -63,16 +64,21 @@
       nbl = "nix build";
       nlg = "nix log check";
 
+      # Media / yt-dlp Aliases
+      dlp = "yt-dlp -f \"bv*+ba/b\" --embed-thumbnail --embed-metadata";
+
       # Warp-cli Aliases
       warpcnt = "warp-cli connect";
       warpdcnt = "warp-cli disconnect";
       warpregnew = "warp-cli registration new";
       warpsts = "warp-cli status";
+
+      y = "yazi";
     };
 
     # ────────────── Functions & Raw Zsh Config ──────────────
     initContent = ''
-            export LS_COLORS=$LS_COLORS:'di=01;33:'
+      export LS_COLORS=$LS_COLORS:'di=01;33:'
 
       # Optimized Global Directory Jump
       jd() {
@@ -89,6 +95,20 @@
               --preview 'bat --line-range=:50 --color=always ~/{}') \
           && nvim ~/"$file"
       }
+
+
+      # QML Loop Downloader (H.264 + Faststart + No Audio)
+      ytdl-qml() {
+        if [ -z "$1" ]; then
+          echo "Usage: ytdl-qml <video_url>"
+          return 1
+        fi
+
+        yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]" \
+          --exec "ffmpeg -i {} -c:v libx264 -movflags +faststart -an \"{}_loop.mp4\" && mv \"{}_loop.mp4\" {}" \
+          "$1"
+      }
+
 
     '';
   };

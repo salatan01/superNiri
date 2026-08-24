@@ -61,7 +61,7 @@
             home-manager.backupFileExtension = "zbakkk";
             # ---------------
 
-            home-manager.users.nightkat01 = import ./home.nix;
+            home-manager.users.superkat01 = import ./home.nix;
 
             home-manager.extraSpecialArgs = {
               inherit
