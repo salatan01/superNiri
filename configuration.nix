@@ -111,6 +111,7 @@
   environment.systemPackages = with pkgs; [
   gh
   unstable.opencode
+  exiftool
   unstable.ani-cli
     duf
     ffmpeg 
