@@ -9,10 +9,9 @@ let
       imagemagick
       findutils
       coreutils
+      file
     ];
 
-    # Reads the file directly from the relative directory path.
-    # No more escaping tricks (''${}) needed here, as the text is handled raw.
     text = builtins.readFile ./assets/scripts/mega_sanitize.sh;
   };
 in

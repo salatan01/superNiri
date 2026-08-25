@@ -4,12 +4,13 @@ mega_sanitize() {
   local target_dir="${1:-.}"
 
   # Strict dependency check
-  if ! command -v exiftool &>/dev/null || ! command -v magick &>/dev/null; then
-    echo "Error: Both 'exiftool' and 'imagemagick' must be installed." >&2
-    return 1
-  fi
+  for tool in exiftool magick file find rm mv cp touch mktemp; do
+    if ! command -v "$tool" &>/dev/null; then
+      echo "Error: Required binary '$tool' is not installed." >&2
+      return 1
+    fi
+  done
 
-  # Interactive prompt: Ask ONCE at the beginning if running in a terminal
   local DELETE_ORIGINALS=false
   if [[ -t 0 ]]; then
     echo -n "Do you want to delete the original files after successful sanitization? (y/N): "
@@ -25,11 +26,9 @@ mega_sanitize() {
 
   echo "=== Starting Hardened Mega Sanitize in: $target_dir ==="
 
-  # Track both working files globally for flawless cleanup on interrupt
   local CURRENT_TMP=""
   local CURRENT_SAFE=""
 
-  # Precise signal trapping with conventional POSIX exit codes
   trap '
         echo -e "\n[!] Interrupted via Ctrl+C. Cleaning up working files..." >&2
         [[ -n "$CURRENT_TMP" ]] && rm -f -- "$CURRENT_TMP"
@@ -44,30 +43,40 @@ mega_sanitize() {
         exit 143
     ' SIGTERM
 
-  # Process substitution prevents the subshell trap isolation bug
   while IFS= read -r -d '' img; do
-
     if [[ "$img" == *-safe.* ]]; then
       continue
     fi
 
-    # Pure Bash parameter expansion prevents thousands of costly subprocess forks
     local filename="${img##*/}"
     local dir="${img%/*}"
     [[ "$dir" == "$img" ]] && dir="."
-
     local base="${filename%.*}"
-    local ext="${filename##*.}"
-    local safe_img="$dir/${base}-safe.${ext}"
+
+    # Detect real format via magic bytes instead of relying on extension
+    local mime_type
+    mime_type=$(file --mime-type -b -- "$img" 2>/dev/null)
+
+    local real_ext=""
+    case "$mime_type" in
+    image/jpeg) real_ext="jpg" ;;
+    image/png) real_ext="png" ;;
+    image/webp) real_ext="webp" ;;
+    *)
+      echo "  └─ [ERROR] Unsupported or unrecognized MIME type '$mime_type' for $filename" >&2
+      continue
+      ;;
+    esac
+
+    local safe_img="$dir/${base}-safe.${real_ext}"
 
     if [[ -e "$safe_img" ]]; then
-      echo "[-] Skipping (Safe copy already exists): $filename"
+      echo "[-] Skipping (Safe copy already exists): ${base}-safe.${real_ext}"
       continue
     fi
 
-    echo "[+] Processing: $filename"
+    echo "[+] Processing: $filename (Detected: $real_ext)"
 
-    # Register the safe image for trap cleanup before creating it
     CURRENT_SAFE="$safe_img"
 
     if ! cp -- "$img" "$safe_img"; then
@@ -76,15 +85,16 @@ mega_sanitize() {
       continue
     fi
 
-    if ! exiftool -all= -overwrite_original "$safe_img" &>/dev/null; then
-      echo "  └─ [ERROR] ExifTool failed on $filename. Cleaning up partial file." >&2
+    # -m ignores minor EXIF errors (corrupted metadata tags)
+    local exif_err
+    if ! exif_err=$(exiftool -m -all= -overwrite_original "$safe_img" 2>&1); then
+      echo "  └─ [ERROR] ExifTool failed on $filename: $exif_err" >&2
       rm -f -- "$safe_img"
       CURRENT_SAFE=""
       continue
     fi
 
-    # Create temp file in the SAME directory to guarantee an ATOMIC 'mv'
-    if ! CURRENT_TMP=$(mktemp -p "$dir" --suffix=".$ext" .sanitize_XXXXXX); then
+    if ! CURRENT_TMP=$(mktemp -p "$dir" --suffix=".$real_ext" .sanitize_XXXXXX); then
       echo "  └─ [ERROR] Failed to create temp file for $filename" >&2
       rm -f -- "$safe_img"
       CURRENT_SAFE=""
@@ -92,30 +102,25 @@ mega_sanitize() {
     fi
 
     local magick_status=0
-    if [[ "${ext,,}" == "png" ]]; then
-      # PNG32: forces maximum pixel sanitization over layout optimization
-      magick "$safe_img" -strip PNG32:"$CURRENT_TMP" &>/dev/null
+    local magick_err=""
+    if [[ "$real_ext" == "png" ]]; then
+      magick_err=$(magick "$safe_img" -strip PNG32:"$CURRENT_TMP" 2>&1)
       magick_status=$?
     else
-      magick "$safe_img" -strip "$CURRENT_TMP" &>/dev/null
+      magick_err=$(magick "$safe_img" -strip "$CURRENT_TMP" 2>&1)
       magick_status=$?
     fi
 
-    # Verify execution and swap atomically (safeguarded with --)
     if [[ $magick_status -eq 0 ]] && mv -- "$CURRENT_TMP" "$safe_img"; then
-
-      # Explicit verification of timestamp preservation
       if ! touch -r "$img" "$safe_img" &>/dev/null; then
         echo "  └─ [WARNING] Failed to preserve original timestamp." >&2
       fi
 
-      echo "  └─ Cleaned: ${base}-safe.${ext}"
+      echo "  └─ Cleaned: ${base}-safe.${real_ext}"
 
-      # Clear state trackers; the file is now safely finalized
       CURRENT_TMP=""
       CURRENT_SAFE=""
 
-      # Verified deletion path protecting against filenames starting with '-'
       if [[ "$DELETE_ORIGINALS" == true ]]; then
         if rm -f -- "$img"; then
           echo "  └─ Removed original file."
@@ -124,7 +129,7 @@ mega_sanitize() {
         fi
       fi
     else
-      echo "  └─ [ERROR] ImageMagick re-encoding failed for $filename" >&2
+      echo "  └─ [ERROR] ImageMagick re-encoding failed for $filename: $magick_err" >&2
       rm -f -- "$CURRENT_TMP" "$safe_img"
       CURRENT_TMP=""
       CURRENT_SAFE=""
