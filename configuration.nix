@@ -9,6 +9,7 @@
     # Include the results of the hardware scan.
     /etc/nixos/hardware-configuration.nix
     ./modules/inputs.nix
+    ./modules/niri.nix
   ];
 
   # Bootloader.
@@ -49,7 +50,7 @@
   services.flatpak.enable = true;
   services.cloudflare-warp.enable = true;
 
-  services.displayManager.gdm.enable = true;
+  services.displayManager.ly.enable = true;
   services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
@@ -113,6 +114,7 @@
   unstable.opencode
   exiftool
   unstable.ani-cli
+  unstable.noctalia 
     duf
     ffmpeg 
    unstable.yt-dlp
@@ -126,6 +128,8 @@
     yazi
     lohit-fonts.bengali
     wl-clipboard
+    # unstable.catgirldownloader
+    gparted
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

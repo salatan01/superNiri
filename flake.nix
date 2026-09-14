@@ -12,6 +12,12 @@
     parallex.url = "github:nightkatt/parallex";
     parallex.inputs.nixpkgs.follows = "nixpkgs";
 
+    skwd-wall.url = "github:liixini/skwd-wall";
+skwd-wall.inputs.nixpkgs.follows = "nixpkgs";
+
+
+
+
   };
   outputs =
     {
@@ -22,6 +28,7 @@
       nixpkgs-old,
       home-manager,
       parallex,
+      skwd-wall,
       ...
     }@inputs:
     let
@@ -51,6 +58,7 @@
         };
         modules = [
           ./configuration.nix
+skwd-wall.nixosModules.default
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
