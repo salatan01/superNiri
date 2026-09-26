@@ -6,6 +6,7 @@
 
   imports = [
     ./packages.nix
+    ./mime.nix
     ./shell/zsh.nix
     ./shell/starship.nix
     ./shell/tools.nix

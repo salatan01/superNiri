@@ -1,12 +1,8 @@
-# Core system configuration: boot, networking, locale, users, nix.
-# (Packages and standalone programs live in ./packages.nix.)
+# Core system configuration: networking, locale, users, nix.
+# (Boot lives in ./boot.nix; packages and programs in ./packages.nix.)
 { pkgs, unstable, ... }:
 
 {
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   networking.hostName = "nixos";
   # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 

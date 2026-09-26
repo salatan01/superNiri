@@ -7,6 +7,6 @@
     pkgs.atool
     pkgs.httpie
     pkgs.eza
-    pkgs.zoxide
+    # zoxide — provided by programs.zoxide in shell/tools.nix
   ];
 }
