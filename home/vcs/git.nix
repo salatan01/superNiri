@@ -3,11 +3,12 @@
 let
   homeDir = config.home.homeDirectory;
   gitEmail = "259588134+salatan01@users.noreply.github.com";
-  pubKeyPath = "${homeDir}/.ssh/id_ed25519.pub";
+  # Inlined from ~/.ssh/id_ed25519.pub — eval-safe on fresh machines (no builtins.readFile).
+  pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFSgBmubEWniWIcuEHV3iuF2u/ZpKPdaD+NeBKOxq59W";
 in
 {
   home.file.".ssh/allowed_signers".text = ''
-    ${gitEmail} ${builtins.readFile pubKeyPath}
+    ${gitEmail} ${pubKey}
   '';
 
   # Delta is now a standalone module in newer Home Manager versions

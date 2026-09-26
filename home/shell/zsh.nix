@@ -97,41 +97,8 @@
       }
 
 
-      # QML Loop Downloader (H.264 + Faststart + No Audio)
-      ytdl-qml() {
-        if [ -z "$1" ]; then
-          echo "Usage: ytdl-qml <video_url>"
-          return 1
-        fi
-
-        yt-dlp -f "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]" \
-          --exec "ffmpeg -i {} -c:v libx264 -movflags +faststart -an \"{}_loop.mp4\" && mv \"{}_loop.mp4\" {}" \
-          "$1"
-      }
-
 
     '';
   };
 
-  # ────────────── The Ultimate Dev Integrations ──────────────
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
 }

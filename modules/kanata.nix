@@ -1,10 +1,6 @@
-#                                         Common
-#                                         INPUTS
+# Kanata (Super-Vim keyboard logic) + console
 
 {
-  config,
-  pkgs,
-  pinned,
   old,
   ...
 }:

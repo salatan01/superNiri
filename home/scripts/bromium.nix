@@ -1,3 +1,4 @@
+# bromium.nix — sandboxed Chromium wrapper (renamed from wrappers.nix)
 { pkgs, ... }:
 
 let

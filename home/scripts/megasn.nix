@@ -12,7 +12,7 @@ let
       file
     ];
 
-    text = builtins.readFile ./assets/scripts/mega_sanitize.sh;
+    text = builtins.readFile ../assets/scripts/mega_sanitize.sh;
   };
 in
 {
