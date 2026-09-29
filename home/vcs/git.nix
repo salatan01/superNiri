@@ -4,7 +4,8 @@ let
   homeDir = config.home.homeDirectory;
   gitEmail = "259588134+salatan01@users.noreply.github.com";
   # Inlined from ~/.ssh/id_ed25519.pub — eval-safe on fresh machines (no builtins.readFile).
-  pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFSgBmubEWniWIcuEHV3iuF2u/ZpKPdaD+NeBKOxq59W";
+  pubKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM7KydNmHCWkiU4M9SrpmYuhlnlY6Jxex+rXYaPr9Ta6 superkat01@nixos
+";
 in
 {
   home.file.".ssh/allowed_signers".text = ''

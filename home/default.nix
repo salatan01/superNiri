@@ -13,6 +13,7 @@
     ./terminals/ghostty.nix
     ./terminals/kitty.nix
     ./launcher/wofi.nix
+    ./hypridle.nix
     ./vcs/git.nix
     ./scripts/bromium.nix
     ./scripts/megasn.nix

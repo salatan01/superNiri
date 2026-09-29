@@ -82,7 +82,8 @@
     imv
     matugen
     unstable.noctalia
-    old.swww
+    # old.swww
+    awww
     wayland-utils
     brightnessctl
     playerctl
@@ -99,7 +100,6 @@
     # motrix
     # vesktop
 
-
     # Productivity & Writing
     kdePackages.ghostwriter
     # zed-editor
@@ -111,7 +111,6 @@
     # mpv
     # obs-studio
     # spotify
-
 
     # Gaming
     # steam-run
@@ -160,7 +159,7 @@
     # unstable.marksman
     # unstable.shellcheck
     # unstable.shfmt
-    
+
     unstable.stretchly
 
     # ── Imported from niriDE: wm/display/audio/steam ──

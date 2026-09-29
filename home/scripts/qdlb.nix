@@ -63,7 +63,6 @@ pkgs.writeShellApplication {
     }
 
     # --- Step 1: URL Collection Phase ---
-    # Case A: Passed as CLI arguments
     if [[ $# -gt 0 ]]; then
       echo -e "''${BLUE}==> Collecting URLs from CLI arguments...''${NC}"
       for arg in "$@"; do
@@ -75,7 +74,6 @@ pkgs.writeShellApplication {
       done
     fi
 
-    # Case B: Interactive prompt loop if no valid CLI arguments
     if [[ "''${#urls[@]}" -eq 0 ]]; then
       echo -e "Enter URLs (or ''${YELLOW}name|URL''${NC}). Press ''${YELLOW}Enter on a blank line''${NC} or type ''${YELLOW}done''${NC} to start processing.\n"
       
@@ -129,10 +127,12 @@ pkgs.writeShellApplication {
         RAW_TITLE="$preset_name"
       else
         echo -e "\n''${BLUE}[$item_num/$TOTAL_QUEUE] Fetching metadata...''${NC}"
-        RAW_TITLE=$(yt-dlp --cookies-from-browser firefox --no-playlist -j "$target_url" 2>/dev/null | jq -r '.title // "video"' || echo "video_$item_num")
+        RAW_TITLE=$(yt-dlp --no-playlist -j "$target_url" 2>/dev/null | jq -r '.title // empty' || true)
+        if [[ -z "$RAW_TITLE" ]]; then
+          RAW_TITLE=$(yt-dlp --cookies-from-browser firefox --no-playlist -j "$target_url" 2>/dev/null | jq -r '.title // "video"' || echo "video_$item_num")
+        fi
       fi
 
-      # Path Sanitization
       SAFE_TITLE=$(echo "$RAW_TITLE" \
         | tr -d '[:cntrl:]' \
         | sed -E 's/[#%?\x22\x27`\\\/[\]()!:=]/_/g' \
@@ -141,7 +141,6 @@ pkgs.writeShellApplication {
 
       SAFE_TITLE="''${SAFE_TITLE:-video_$item_num}"
 
-      # Prompt for edit ONLY if no custom preset was provided in step 1
       if [[ -z "$preset_name" && -t 0 ]]; then
         echo -e "''${BLUE}[?] Edit Filename''${NC} (Use backspace/arrow keys, or press Enter):"
         read -e -r -p "Filename: " -i "$SAFE_TITLE" USER_TITLE
@@ -178,9 +177,9 @@ pkgs.writeShellApplication {
       echo ""
     fi
 
-    # 3. Overwrite Policy
+    # 3. Overwrite / Duplicate Handling
     echo -e "\n''${BLUE}[?] Handle Existing Files:''${NC}"
-    echo "  1) Skip existing files (Default)"
+    echo "  1) Auto-increment name if exists (e.g. video_01.mp4) (Default)"
     echo "  2) Overwrite existing files"
     OVERWRITE_MODE="1"
     if [[ -t 0 ]]; then
@@ -197,30 +196,51 @@ pkgs.writeShellApplication {
       item_num=$((idx + 1))
       target_url="''${urls[$idx]}"
       target_base="''${names[$idx]}"
+
+      if [[ "$OVERWRITE_MODE" == "1" && -f "''${DEST_DIR}/''${target_base}.mp4" ]]; then
+        inc=1
+        while [[ -f "''${DEST_DIR}/''${target_base}_$(printf "%02d" $inc).mp4" ]]; do
+          inc=$((inc + 1))
+        done
+        target_base="''${target_base}_$(printf "%02d" $inc)"
+      fi
+
       final_file="''${DEST_DIR}/''${target_base}.mp4"
 
       echo -e "''${BLUE}[$item_num/$TOTAL_QUEUE] Processing:''${NC} $target_base"
 
-      if [[ -f "$final_file" && "$OVERWRITE_MODE" == "1" ]]; then
-        echo -e "  ''${YELLOW}[!] File '$final_file' already exists. Skipping...''${NC}\n"
-        continue
-      fi
-
       temp_file=$(mktemp --tmpdir qdlb_raw_XXXXXX.mp4)
       rm -f "$temp_file"
 
-      echo -e "  ''${BLUE}==> Downloading raw stream...''${NC}"
+      # Attempt 1: Anonymous download
+      echo -e "  ''${BLUE}==> Downloading raw stream (Anonymous)...''${NC}"
       set +e
       yt-dlp \
         --no-playlist \
         --force-overwrites \
-        --cookies-from-browser firefox \
         -f "$FORMAT_SPEC" \
         --merge-output-format mp4 \
         -o "$temp_file" \
         "$target_url"
       dl_status=$?
       set -e
+
+      # Attempt 2: Fallback to Firefox cookies if anonymous failed
+      if [[ $dl_status -ne 0 || ! -s "$temp_file" ]]; then
+        echo -e "  ''${YELLOW}[!] Anonymous fetch failed. Retrying with Firefox cookies...''${NC}"
+        rm -f "$temp_file"
+        set +e
+        yt-dlp \
+          --no-playlist \
+          --force-overwrites \
+          --cookies-from-browser firefox \
+          -f "$FORMAT_SPEC" \
+          --merge-output-format mp4 \
+          -o "$temp_file" \
+          "$target_url"
+        dl_status=$?
+        set -e
+      fi
 
       if [[ $dl_status -ne 0 || ! -s "$temp_file" ]]; then
         echo -e "  ''${RED}[X] Download failed for $target_url. Skipping to next...''${NC}\n"
@@ -259,9 +279,16 @@ pkgs.writeShellApplication {
     done
 
     # --- Step 5: Summary Report ---
-    echo -e "''${GREEN}=== Batch Download Complete ===''${NC}"
-    if [[ "''${#FAILED_ITEMS[@]}" -gt 0 ]]; then
-      echo -e "''${RED}The following items encountered errors:''${NC}"
+    FAILED_COUNT="''${#FAILED_ITEMS[@]}"
+    SUCCESS_COUNT=$((TOTAL_QUEUE - FAILED_COUNT))
+
+    echo -e "''${BLUE}=== Batch Processing Summary ===''${NC}"
+    echo -e "Total Queued:  ''${TOTAL_QUEUE}"
+    echo -e "  ''${GREEN}✓ Succeeded:''${NC} ''${SUCCESS_COUNT}"
+    echo -e "  ''${RED}✗ Failed:''${NC}    ''${FAILED_COUNT}"
+
+    if [[ "$FAILED_COUNT" -gt 0 ]]; then
+      echo -e "\n''${RED}Failed Items Breakdown:''${NC}"
       for failed in "''${FAILED_ITEMS[@]}"; do
         echo -e "  - $failed"
       done
