@@ -1,0 +1,6 @@
+binds {
+    Ctrl+Shift+T hotkey-overlay-title="Wallpaper Browser" { spawn "dms" "ipc" "call" "dankdash" "wallpaper"; }
+    Ctrl+Shift+U hotkey-overlay-title="Wallpaper: Next" { spawn "dms" "ipc" "call" "wallpaper" "next"; }
+    Ctrl+Shift+Y hotkey-overlay-title="Wallpaper: Previous" { spawn "dms" "ipc" "call" "wallpaper" "prev"; }
+    Super+Shift+P hotkey-overlay-title="Power Menu: Open" { spawn "dms" "ipc" "call" "powermenu" "open"; }
+}

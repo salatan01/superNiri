@@ -6,6 +6,7 @@
     ./desktop.nix
     ./kanata.nix
     ./niri.nix
+    ./qlock.nix
     ./packages.nix
   ];
 }

@@ -45,6 +45,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # ── Core CLI / TUI (stable) ──
+    brave
     gh
     exiftool
     age

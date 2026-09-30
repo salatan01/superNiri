@@ -1,0 +1,22 @@
+// DMS Window Rules - Managed by DankMaterialShell
+// Do not edit manually - changes may be overwritten
+
+// @id=wr_1772956378527882514 @name=Smile
+window-rule {
+    match app-id="it.mijorus.smile"
+    open-floating true
+}
+
+// @id=wr_1773041768193609800 @name=MPV
+window-rule {
+    match app-id="mpv"
+    open-maximized true
+}
+
+// @id=wr_1773050677273729640 @name=Stretchly
+window-rule {
+    match app-id="electron" title="Strechly!"
+    open-floating true
+    open-fullscreen true
+    open-focused true
+}

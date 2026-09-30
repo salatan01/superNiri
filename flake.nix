@@ -10,6 +10,11 @@
 
     parallex.url = "github:nightkatt/parallex";
     parallex.inputs.nixpkgs.follows = "nixpkgs";
+
+    qlock = {
+      url = "github:salatan01/qLock";
+      inputs.nixpkgs.follows = "nixpkgs"; # share one ffmpeg/Qt with your system
+    };
   };
 
   outputs =
@@ -18,6 +23,7 @@
       nixpkgs,
       nixpkgs-unstable,
       nixpkgs-old,
+      qlock,
       ...
     }@inputs:
     let
@@ -38,6 +44,7 @@
           inherit inputs unstable old;
         };
         modules = [ ./configuration.nix ];
+
       };
     };
 }
