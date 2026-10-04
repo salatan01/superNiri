@@ -83,8 +83,8 @@
     imv
     matugen
     unstable.noctalia
-    # old.swww
-    awww
+    old.swww
+    # awww
     wayland-utils
     brightnessctl
     playerctl
