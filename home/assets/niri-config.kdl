@@ -3,30 +3,24 @@
 // #######################################################################################
 
 // --- AUTOSTART ---
-// Rule of thumb for what goes here vs systemd:
-//   spawn-at-startup → UI components (bars, wallpaper, idle daemon, apps)
-//   systemd user service → background daemons (KDE services, xwayland-satellite)
-//
-// All KDE backend daemons (kded6, kglobalacceld, polkit-kde-agent, knighttime,
-// kactivitymanagerd, baloo, kscreen-backend) are managed by systemd in wm.nix.
-// xwayland-satellite is also a systemd service — see note below.
+// Session-local UI processes only. (No KDE backend daemons on this host.)
 
 hotkey-overlay {
     skip-at-startup
 }
 
 // UI layer — session-local UI processes
-// spawn-at-startup "dms" "run"
 spawn-at-startup "noctalia"
-// spawn-at-startup "hypridle"
 spawn-at-startup "stretchly"
-spawn-at-startup "skwd-walld"
-// spawn-at-startup "swww-daemon"
+// swww-daemon retired in favour of awww (qlex backend) — never run both,
+// they fight over the same outputs.
+spawn-at-startup "awww-daemon"
+spawn-at-startup "qlexd"
 
 
 // xwayland-satellite is intentionally NOT spawned here.
-// It runs as a systemd user service (xwayland-satellite.service in wm.nix)
-// so it is ready before any XWayland app requests it, not after niri loads.
+// Niri spawns it on demand for X11 clients (DISPLAY below enables this),
+// provided the package is installed (see modules/packages.nix).
 
 // --- ENVIRONMENT VARIABLES ---
 environment {
@@ -34,9 +28,9 @@ environment {
     NIXOS_OZONE_WL      "1"
     DISPLAY             ":0" // XWayland-Satellite bridge for legacy apps
 
-    // XDG_CURRENT_DESKTOP is already set in environment.sessionVariables
-    // in wm.nix. Kept here as well so niri's own environment is consistent
-    // for any app that reads it from the compositor directly.
+    // XDG_CURRENT_DESKTOP is also set in environment.sessionVariables
+    // in modules/desktop.nix. Kept here as well so niri's own environment
+    // is consistent for any app that reads it from the compositor directly.
     XDG_CURRENT_DESKTOP "niri"
 }
 
@@ -91,36 +85,13 @@ layout {
     }
 }
 
-// --- PRIVACY & RENDERING ---
-layer-rule {
-    match namespace="swaync-notification-window"
-    match namespace="swaync-control-center"
-    block-out-from "screen-capture"
-}
+// --- WINDOW RULES ---
+// (Rules for uninstalled apps — swaync, librewolf, zed, code, Alacritty,
+// electron — were pruned. Re-add when you install the app.)
 
 window-rule {
     geometry-corner-radius 10
     clip-to-geometry true
-}
-
-window-rule {
-    match app-id="librewolf"
-    open-maximized true
-}
-
-window-rule {
-    match app-id="dev.zed.Zed"
-    open-maximized true
-}
-
-window-rule {
-    match app-id="code"
-    open-maximized true
-}
-
-window-rule {
-    match app-id="Alacritty"
-    opacity 0.5
 }
 
 window-rule {
@@ -147,7 +118,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="nemo"
+    match app-id="org.gnome.Nautilus"
     default-column-width { proportion 0.5; }
     draw-border-with-background false
 }
@@ -157,17 +128,12 @@ window-rule {
     open-maximized true
 }
 
-window-rule {
-    match app-id="electron"
-    open-maximized true
-}
-
 // --- KEYBINDINGS ---
 binds {
     // App Launches
     Mod+Q { spawn "ghostty"; }
     Mod+I { spawn "kitty"; }
-    Mod+E { spawn "nemo"; }
+    Mod+E { spawn "nautilus"; }
     Mod+A hotkey-overlay-title="Open App Launcher: noctalia launcher" {
         spawn-sh "noctalia msg panel-toggle launcher"
     }
@@ -188,8 +154,7 @@ spawn-sh "noctalia msg panel-toggle control-center notifications"
 
     Mod+B { spawn "brave"; }
     Mod+N { spawn "ghostwriter"; }
-    Mod+W { spawn "parallex" "run"; }
-    Mod+T hotkey-overlay-title="Skwd-wall" { spawn "skwd-wall-v2"; }
+    Mod+W hotkey-overlay-title="Wallpaper picker : qlex" { spawn "qlex" "ui"; }
 
     // Window Management
     Mod+C { close-window; }
@@ -197,13 +162,8 @@ spawn-sh "noctalia msg panel-toggle control-center notifications"
     Mod+F { maximize-column; }
     Mod+Shift+F { fullscreen-window; }
 
-    // Theme Toggle
-    Mod+Shift+D { spawn "toggle-mode"; }
-
     // Session Management
-    // NOTE: Mod+Shift+P (= Super+Shift+P) is also bound in dms/binds.kdl
-    // to the DMS power menu — pressing it currently triggers both.
-    Mod+Return { spawn-sh "noctalia msg session lock"; }
+    Mod+Return { spawn "qlock"; }
     Mod+Shift+E { quit; }
 
     // Screenshots
@@ -272,8 +232,6 @@ spawn-sh "noctalia msg panel-toggle control-center notifications"
     XF86AudioPrev allow-when-locked=true { spawn "playerctl" "previous"; }
 }
 
-include "dms/cursor.kdl"
-include "dms/binds.kdl"
-include "dms/windowrules.kdl"
-
+// noctalia.kdl is generated at runtime by Noctalia's theme engine
+// (theme.templates includes "niri") — keep it writable, never store-manage it.
 include "noctalia.kdl"

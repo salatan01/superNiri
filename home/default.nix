@@ -6,6 +6,8 @@
 
   imports = [
     ./packages.nix
+    ./noctalia.nix
+    ./niri.nix
     ./qlex.nix
     ./mime.nix
     ./shell/zsh.nix

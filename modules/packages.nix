@@ -82,7 +82,6 @@
     # ── Niri / Wayland ──
     imv
     matugen
-    unstable.noctalia
     old.swww
     # awww
     wayland-utils
@@ -109,7 +108,7 @@
     # Media & Audio
     # kdePackages.qtmultimedia
     # mpd
-    # mpv
+    mpv
     # obs-studio
     # spotify
 
