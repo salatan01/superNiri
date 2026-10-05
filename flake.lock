@@ -108,6 +108,26 @@
         "type": "github"
       }
     },
+    "qlex": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1791126931,
+        "narHash": "sha256-Kap3Ctyc8/INoY/752IeKifQRd4EbIW0boel9B6egow=",
+        "owner": "salatan01",
+        "repo": "qlex",
+        "rev": "b11c6f9dd979bf71b918ef9fc4193493435e9a91",
+        "type": "github"
+      },
+      "original": {
+        "owner": "salatan01",
+        "repo": "qlex",
+        "type": "github"
+      }
+    },
     "qlock": {
       "inputs": {
         "nixpkgs": [
@@ -135,6 +155,7 @@
         "nixpkgs-old": "nixpkgs-old",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "parallex": "parallex",
+        "qlex": "qlex",
         "qlock": "qlock"
       }
     },

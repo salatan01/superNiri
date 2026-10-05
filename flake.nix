@@ -15,6 +15,11 @@
       url = "github:salatan01/qLock";
       inputs.nixpkgs.follows = "nixpkgs"; # share one ffmpeg/Qt with your system
     };
+
+    qlex = {
+      url = "github:salatan01/qlex";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -24,6 +29,7 @@
       nixpkgs-unstable,
       nixpkgs-old,
       qlock,
+      qlex,
       ...
     }@inputs:
     let

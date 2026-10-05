@@ -6,6 +6,7 @@
 
   imports = [
     ./packages.nix
+    ./qlex.nix
     ./mime.nix
     ./shell/zsh.nix
     ./shell/starship.nix

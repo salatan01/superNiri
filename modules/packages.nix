@@ -127,6 +127,7 @@
     # Development & editors
     gcc
     lazygit
+    git-annex
     gnumake
     # nodejs
     tree-sitter
