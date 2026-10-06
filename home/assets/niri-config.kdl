@@ -19,14 +19,18 @@ spawn-at-startup "qlexd"
 
 
 // xwayland-satellite is intentionally NOT spawned here.
-// Niri spawns it on demand for X11 clients (DISPLAY below enables this),
-// provided the package is installed (see modules/packages.nix).
+// Niri starts it automatically at startup when the package is installed
+// (see modules/packages.nix) and keeps X11 clients on DISPLAY ":0".
+// Verified: runs as `xwayland-satellite :0` outside any systemd unit —
+// it idles with zero clients until an X11 app appears.
 
 // --- ENVIRONMENT VARIABLES ---
 environment {
     QT_QPA_PLATFORM     "wayland"
     NIXOS_OZONE_WL      "1"
     DISPLAY             ":0" // XWayland-Satellite bridge for legacy apps
+    XCURSOR_THEME       "Bibata-Modern-Classic"
+    XCURSOR_SIZE        "24"
 
     // XDG_CURRENT_DESKTOP is also set in environment.sessionVariables
     // in modules/desktop.nix. Kept here as well so niri's own environment
@@ -35,6 +39,7 @@ environment {
 }
 
 cursor {
+    xcursor-theme "Bibata-Modern-Classic"
     xcursor-size 24
 }
 
