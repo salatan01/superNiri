@@ -16,7 +16,7 @@
     settings = {
       videoDirectory = "~/qSets/qLock/";
       mode = "random";
-      volume = 15;
+      volume = 5;
       repeat = true;
       playback = 2;
     };

@@ -123,7 +123,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="org.gnome.Nautilus"
+    match app-id="nemo"
     default-column-width { proportion 0.5; }
     draw-border-with-background false
 }
@@ -138,7 +138,7 @@ binds {
     // App Launches
     Mod+Q { spawn "ghostty"; }
     Mod+I { spawn "kitty"; }
-    Mod+E { spawn "nautilus"; }
+    Mod+E { spawn "nemo"; }
     Mod+A hotkey-overlay-title="Open App Launcher: noctalia launcher" {
         spawn-sh "noctalia msg panel-toggle launcher"
     }

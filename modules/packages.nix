@@ -51,9 +51,10 @@
     age
     realesrgan-ncnn-vulkan
     realcugan-ncnn-vulkan
+
     cava
     duf
-    nautilus
+    nemo # GTK3 — follows Noctalia palette via gtk.css (Nautilus is libadwaita, stays Adwaita-dark)
     ffmpeg
     btop
     ripgrep
@@ -127,6 +128,8 @@
     gcc
     lazygit
     git-annex
+    git-annex-remote-rclone
+    rclone
     gnumake
     # nodejs
     tree-sitter
