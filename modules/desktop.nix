@@ -18,6 +18,10 @@
   services.udisks2.enable = true; # Storage daemon for mounting/unmounting
   services.gvfs.enable = true; # Trash, MTP (phones), network shares, and VFS integration
   services.devmon.enable = true; # Automatic drive mounting on USB insertion
+  services.upower.enable = true;
+  services.power-profiles-daemon.enable = true;
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;

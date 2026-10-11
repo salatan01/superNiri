@@ -100,6 +100,8 @@
     # chromium
     # motrix
     # vesktop
+    alacritty
+    sbctl
 
     # Productivity & Writing
     kdePackages.ghostwriter

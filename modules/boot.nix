@@ -1,13 +1,20 @@
-# Boot: systemd-boot + Plymouth splash + silent boot.
+# Boot: Lanzaboote (Secure Boot) + Plymouth splash + silent boot.
 # Imported from ~/Desktop/niriDE/modules/boot.nix.
-{ ... }:
+{ lib, ... }:
 
 {
   boot = {
     loader = {
-      systemd-boot.enable = true;
+      # Force disable standard systemd-boot to delegate bootloader signing to Lanzaboote
+      systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = true;
       timeout = 0; # Hold space to make the boot menu appear!
+    };
+
+    # Lanzaboote Secure Boot configuration
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
     };
 
     # Splash screen

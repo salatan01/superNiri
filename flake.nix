@@ -8,6 +8,11 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-old.url = "github:nixos/nixpkgs/nixos-25.11";
 
+    # Lanzaboote Secure Boot module (no nixpkgs follows override to avoid toolchain breakage)
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+    };
+
     parallex.url = "github:nightkatt/parallex";
     parallex.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -30,6 +35,7 @@
       nixpkgs-old,
       qlock,
       qlex,
+      lanzaboote,
       ...
     }@inputs:
     let
@@ -49,8 +55,10 @@
         specialArgs = {
           inherit inputs unstable old;
         };
-        modules = [ ./configuration.nix ];
-
+        modules = [
+          lanzaboote.nixosModules.lanzaboote
+          ./configuration.nix
+        ];
       };
     };
 }

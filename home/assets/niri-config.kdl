@@ -38,10 +38,19 @@ environment {
     XDG_CURRENT_DESKTOP "niri"
 }
 
+
+
+
 cursor {
     xcursor-theme "Bibata-Modern-Classic"
     xcursor-size 24
 }
+
+
+
+output "eDP-1" {
+    scale 1.25
+}   
 
 // --- INPUT ---
 input {
@@ -53,7 +62,7 @@ input {
 
     touchpad {
         tap
-        natural-scroll
+        // natural-scroll
         accel-profile "flat"
         dwt // "Disable While Typing" - helps prevent accidental cursor jumps
     }
@@ -148,9 +157,12 @@ binds {
     Mod+S hotkey-overlay-title="Open emoji picker : noctalia-emoji" {
       spawn-sh "noctalia msg panel-toggle launcher /e/ " 
     }
-    Mod+D hotkey-overlay-title="Open notification center" {
-spawn-sh "noctalia msg panel-toggle control-center notifications"
+    Mod+D hotkey-overlay-title="Toggle theme mode dark/light" {
+        spawn-sh "noctalia msg theme-mode-toggle"
+    }
 
+    Mod+P hotkey-overlay-title="Open notification center" {
+        spawn-sh "noctalia msg panel-toggle control-center notifications"
     }
 
     Mod+M hotkey-overlay-title="Open clipboard : noctalia clipboard" {
