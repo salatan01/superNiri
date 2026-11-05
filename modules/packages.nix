@@ -46,6 +46,9 @@
   environment.systemPackages = with pkgs; [
     # ── Core CLI / TUI (stable) ──
     brave
+    librewolf
+    localsend
+    scrcpy
     gh
     exiftool
     age
@@ -95,7 +98,6 @@
     # ── Imported from ~/Desktop/niriDE/modules/pkgs.nix ──
 
     # Web & Internet
-    # brave
     android-tools
     # chromium
     # motrix
@@ -106,13 +108,19 @@
     # Productivity & Writing
     kdePackages.ghostwriter
     # zed-editor
-    # obsidian
+    obsidian
 
     # Media & Audio
     # kdePackages.qtmultimedia
     # mpd
     mpv
+    kdePackages.kdenlive
+    kdePackages.mlt
+    # openshot-qt
+    proton-vpn
+    audacity
     # obs-studio
+    #
     # spotify
 
     # Gaming

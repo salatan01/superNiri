@@ -142,6 +142,18 @@ window-rule {
     open-maximized true
 }
 
+window-rule {
+match app-id="librewolf"
+open-maximized true
+
+
+}
+
+window-rule { match app-id="org.kde.kdenlive"
+open-maximized true
+}
+
+
 // --- KEYBINDINGS ---
 binds {
     // App Launches
