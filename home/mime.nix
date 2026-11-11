@@ -4,20 +4,20 @@
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
-    BROWSER = "brave";
+    BROWSER = "floorp";
   };
 
   xdg.mimeApps = {
     enable = true;
 
     defaultApplications = {
-      # Web Browser (Brave)
-      "text/html" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/http" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/https" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/about" = [ "brave-browser.desktop" ];
-      "x-scheme-handler/unknown" = [ "brave-browser.desktop" ];
-      "application/pdf" = [ "brave-browser.desktop" ];
+      # Web Browser (Floorp)
+      "text/html" = [ "floorp.desktop" ];
+      "x-scheme-handler/http" = [ "floorp.desktop" ];
+      "x-scheme-handler/https" = [ "floorp.desktop" ];
+      "x-scheme-handler/about" = [ "floorp.desktop" ];
+      "x-scheme-handler/unknown" = [ "floorp.desktop" ];
+      "application/pdf" = [ "floorp.desktop" ];
 
       # Text Editor (Neovim)
       "text/plain" = [ "nvim.desktop" ];

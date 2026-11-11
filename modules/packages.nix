@@ -46,7 +46,8 @@
   environment.systemPackages = with pkgs; [
     # ── Core CLI / TUI (stable) ──
     brave
-    librewolf
+    bitwarden-desktop
+    floorp-bin
     localsend
     scrcpy
     gh
@@ -72,7 +73,8 @@
     gparted
 
     # ── Unstable channel ──
-    unstable.opencode
+    # unstable.opencode
+    opencode
     unstable.ani-cli
     unstable.yt-dlp
 
@@ -86,7 +88,7 @@
     # ── Niri / Wayland ──
     imv
     matugen
-    old.swww
+    # old.swww
     # awww
     wayland-utils
     brightnessctl
