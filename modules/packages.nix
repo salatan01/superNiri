@@ -53,8 +53,8 @@
     gh
     exiftool
     age
-    realesrgan-ncnn-vulkan
-    realcugan-ncnn-vulkan
+    # realesrgan-ncnn-vulkan
+    # realcugan-ncnn-vulkan
 
     cava
     duf
@@ -93,7 +93,7 @@
     wayland-utils
     brightnessctl
     playerctl
-    inputs.parallex.packages.${pkgs.stdenv.hostPlatform.system}.default
+    # inputs.parallex.packages.${pkgs.stdenv.hostPlatform.system}.default
     bibata-cursors
     quickshell
 
@@ -116,11 +116,10 @@
     # kdePackages.qtmultimedia
     # mpd
     mpv
-    kdePackages.kdenlive
-    kdePackages.mlt
-    # openshot-qt
+    # kdePackages.kdenlive
+    # kdePackages.mlt
     proton-vpn
-    audacity
+    # audacity
     # obs-studio
     #
     # spotify
