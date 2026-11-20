@@ -61,6 +61,7 @@
     nemo # GTK3 — follows Noctalia palette via gtk.css (Nautilus is libadwaita, stays Adwaita-dark)
     ffmpeg
     btop
+    htop
     ripgrep
     fd
     sd
@@ -73,8 +74,9 @@
     gparted
 
     # ── Unstable channel ──
-    # unstable.opencode
-    opencode
+    unstable.opencode
+    unstable.codex
+    # opencode
     unstable.ani-cli
     unstable.yt-dlp
 
