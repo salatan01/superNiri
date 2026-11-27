@@ -75,7 +75,7 @@
 
     # ── Unstable channel ──
     unstable.opencode
-    unstable.codex
+    unstable.antigravity
     # opencode
     unstable.ani-cli
     unstable.yt-dlp
